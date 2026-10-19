@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}{{ category.meta_title|default:category.name }} | {{ site_settings.company_name|default:"Raya Lifts" }}{% endblock %}
+{% block meta_description %}{{ category.meta_description|default:category.short_description|truncatechars:155 }}{% endblock %}
+{% block content %}
+<section class="page-hero">{% if category.image %}<div class="page-hero-image" style="background-image:url('{{ category.image.url }}')"></div>{% endif %}<div class="container"><p class="eyebrow"><span></span> LIFT CATEGORY</p><h1>{{ category.name }}</h1><p>{{ category.short_description|default:category.description }}</p></div></section>
+<section class="section"><div class="container">{% if category.description %}<div class="category-description">{{ category.description|linebreaks }}</div>{% endif %}<div class="product-grid">{% for product in products %}{% include "website/partials/product_card.html" %}{% empty %}<div class="empty-state">Products for this category will be added soon.</div>{% endfor %}</div></div></section>
+{% endblock %}

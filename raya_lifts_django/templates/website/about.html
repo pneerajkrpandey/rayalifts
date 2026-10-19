@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}About Us | {{ site_settings.company_name|default:"Raya Lifts" }}{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container"><p class="eyebrow"><span></span> WHO WE ARE</p><h1>Moving people.<br><em>Moving possibilities.</em></h1><p>Lift solutions shaped around people, places and everyday life.</p></div></section>
+<section class="section"><div class="container content-grid"><div><p class="eyebrow eyebrow-dark"><span></span> OUR APPROACH</p><h2>{{ site_settings.about_heading|default:"Built around your journey" }}</h2></div><div class="prose"><p>{{ site_settings.about_text|default:"Raya Lifts delivers practical, carefully planned vertical mobility solutions with a focus on safety, service and dependable installation." }}</p>{% if page %}<p>{{ page.body|linebreaksbr }}</p>{% endif %}<p>From understanding your site requirements to helping you choose a suitable lift, our focus is on clear communication and a solution that fits the space.</p><a class="button button-dark" href="{% url 'contact' %}">Start a conversation ↗</a></div></div></section>
+{% endblock %}

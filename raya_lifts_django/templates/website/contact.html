@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Contact | {{ site_settings.company_name|default:"Raya Lifts" }}{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container"><p class="eyebrow"><span></span> CONTACT RAYA LIFTS</p><h1>Let's move your<br><em>project forward.</em></h1><p>Share a few details and our team will get in touch.</p></div></section>
+<section class="section"><div class="container contact-grid"><div class="contact-aside"><p class="eyebrow eyebrow-dark"><span></span> GET IN TOUCH</p><h2>We'd be glad to hear from you.</h2><p>Tell us about your building, space or lift requirement. We'll help you take the next step.</p>
+{% if site_settings.phone %}<div class="contact-detail"><span>PHONE</span><a href="tel:{{ site_settings.phone }}">{{ site_settings.phone }}</a></div>{% endif %}
+{% if site_settings.email %}<div class="contact-detail"><span>EMAIL</span><a href="mailto:{{ site_settings.email }}">{{ site_settings.email }}</a></div>{% endif %}
+{% if site_settings.address %}<div class="contact-detail"><span>ADDRESS</span><p>{{ site_settings.address|linebreaksbr }}</p></div>{% endif %}
+{% if site_settings.whatsapp_number %}<a class="text-link" href="https://wa.me/{{ site_settings.whatsapp_number }}" target="_blank" rel="noopener">Chat on WhatsApp ↗</a>{% endif %}
+</div><div class="contact-form-card"><h2>Send an enquiry</h2><p>Fields marked * are required.</p><form method="post" novalidate>{% csrf_token %}
+<div class="form-row"><div class="form-field"><label for="{{ form.name.id_for_label }}">Full name *</label>{{ form.name }}{{ form.name.errors }}</div><div class="form-field"><label for="{{ form.phone.id_for_label }}">Phone number *</label>{{ form.phone }}{{ form.phone.errors }}</div></div>
+<div class="form-row"><div class="form-field"><label for="{{ form.email.id_for_label }}">Email</label>{{ form.email }}{{ form.email.errors }}</div><div class="form-field"><label for="{{ form.city.id_for_label }}">City</label>{{ form.city }}{{ form.city.errors }}</div></div>
+<div class="form-field"><label for="{{ form.lift_interest.id_for_label }}">Lift type / interest</label>{{ form.lift_interest }}{{ form.lift_interest.errors }}</div>
+<div class="form-field"><label for="{{ form.message.id_for_label }}">How can we help? *</label>{{ form.message }}{{ form.message.errors }}</div>
+<div class="form-consent">{{ form.privacy_consent }}<label for="{{ form.privacy_consent.id_for_label }}">I agree that Raya Lifts may contact me about this enquiry.</label>{{ form.privacy_consent.errors }}</div>
+{{ form.website }}
+<button class="button button-dark button-full" type="submit">Send enquiry <span>↗</span></button>
+</form></div></div></section>
+{% endblock %}
