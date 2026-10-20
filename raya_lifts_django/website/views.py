@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods
 from .forms import EnquiryForm
-from .models import Category, Product, Page, LiftProject, SiteSettings, Service, Testimonial, HomeSection, CustomSection
+from .models import Category, Product, Page, LiftProject, SiteSettings, Service, Testimonial, HomeSection, CustomSection, AboutSection, CompanyStatistic, HeroSection
 
 def home(request):
     categories = Category.objects.filter(is_active=True)
@@ -14,7 +14,8 @@ def home(request):
     pages = Page.objects.filter(is_active=True, show_in_navigation=True)[:4]
     services = Service.objects.filter(is_active=True)
     testimonials = Testimonial.objects.filter(is_active=True)[:6]
-    hero_slides = []  # The site settings hero image can be replaced from the admin without editing templates.
+    hero_slides = []
+    statistics = CompanyStatistic.objects.filter(is_active=True).exclude(value="").exclude(label="")
     return render(request, "website/home.html", {
         "categories": categories,
         "featured_products": featured_products,
@@ -23,15 +24,17 @@ def home(request):
         "services": services,
         "testimonials": testimonials,
         "hero_slides": hero_slides,
+        "statistics": statistics,
+        "home_hero": HeroSection.objects.filter(page_key="home", is_active=True).first(),
     })
 
 def about(request):
     page = Page.objects.filter(is_active=True, slug="about").first()
-    return render(request, "website/about.html", {"page": page})
+    return render(request, "website/about.html", {"page": page, "about_sections": AboutSection.objects.filter(is_active=True), "page_hero": HeroSection.objects.filter(page_key="about", is_active=True).first(), "statistics": CompanyStatistic.objects.filter(is_active=True).exclude(value="").exclude(label="")})
 
 def page_detail(request, slug):
     page = get_object_or_404(Page, slug=slug, is_active=True)
-    return render(request, "website/page_detail.html", {"page": page})
+    return render(request, "website/page_detail.html", {"page": page, "page_hero": HeroSection.objects.filter(page_key=slug, is_active=True).first()})
 
 def catalog(request):
     categories = Category.objects.filter(is_active=True)
@@ -43,6 +46,7 @@ def catalog(request):
     if search_query:
         products = products.filter(Q(name__icontains=search_query) | Q(summary__icontains=search_query) | Q(description__icontains=search_query))
     return render(request, "website/catalog.html", {
+        "page_hero": HeroSection.objects.filter(page_key="catalog", is_active=True).first(),
         "categories": categories,
         "products": products,
         "selected_category": selected_category,
@@ -59,8 +63,16 @@ def product_detail(request, slug):
     return render(request, "website/product_detail.html", {"product": product, "specification_lines": [line.strip() for line in product.specifications.splitlines() if line.strip()]})
 
 def projects(request):
-    project_list = LiftProject.objects.filter(is_active=True, show_on_website=True, client__is_active=True)
-    return render(request, "website/projects.html", {"projects": project_list})
+    project_list = LiftProject.objects.filter(is_active=True, show_on_website=True, client__is_active=True).select_related("client")
+    selected_type = request.GET.get("type", "").strip()
+    if selected_type:
+        project_list = project_list.filter(lift_type=selected_type)
+    project_types = LiftProject.objects.filter(is_active=True, show_on_website=True, client__is_active=True).order_by("lift_type").values_list("lift_type", flat=True).distinct()
+    return render(request, "website/projects.html", {"projects": project_list, "project_types": project_types, "selected_type": selected_type, "page_hero": HeroSection.objects.filter(page_key="projects", is_active=True).first()})
+
+def services_page(request):
+    service_list = Service.objects.filter(is_active=True).order_by("display_order", "id")
+    return render(request, "website/services.html", {"services": service_list, "page_hero": HeroSection.objects.filter(page_key="services", is_active=True).first()})
 
 def contact(request):
     if request.method == "POST":
@@ -84,7 +96,7 @@ def contact(request):
             return redirect("contact")
     else:
         form = EnquiryForm()
-    return render(request, "website/contact.html", {"form": form})
+    return render(request, "website/contact.html", {"form": form, "page_hero": HeroSection.objects.filter(page_key="contact", is_active=True).first()})
 
 def robots_txt(request):
     from django.http import HttpResponse

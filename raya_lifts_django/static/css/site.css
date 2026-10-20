@@ -32,3 +32,29 @@ body{font-family:var(--site-font);color:var(--ink)}
 @media(prefers-reduced-motion:reduce){.testimonial-lane{animation:none!important}.hero-bg,.category-card,.project-card,.product-card,.service-card{transition:none!important}}
 
 .service-card-image{height:110px;margin:-26px -26px 20px;overflow:hidden}.service-card-image img{width:100%;height:100%;object-fit:cover;transition:transform .6s}.service-card:hover .service-card-image img{transform:scale(1.06)}@media(max-width:560px){.service-card-image{margin:-22px -22px 17px}}
+
+/* Navigation, responsive interaction and page-level hero refinements */
+.nav-dropdown{position:relative;display:flex;align-items:center}
+.nav-dropdown>a{display:inline-flex;align-items:center;gap:6px}
+.nav-dropdown-menu{position:absolute;top:100%;left:0;min-width:220px;padding:10px;background:#fff;border:1px solid rgba(16,26,42,.1);border-radius:12px;box-shadow:0 18px 45px rgba(10,22,38,.16);display:grid;gap:3px;opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity .2s ease,transform .2s ease,visibility .2s;z-index:100}
+.nav-dropdown:hover .nav-dropdown-menu,.nav-dropdown:focus-within .nav-dropdown-menu{opacity:1;visibility:visible;transform:translateY(0)}
+.nav-dropdown-menu a{padding:10px 12px;border-radius:8px;color:#172337;white-space:nowrap}
+.nav-dropdown-menu a:hover,.nav-dropdown-menu a:focus{background:#f4f0e7;color:#8c6410}
+.social-mini a,.footer-socials a{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:30px;border-radius:50%;transition:background .2s,color .2s,transform .2s;text-decoration:none}
+.social-mini a:hover,.footer-socials a:hover{background:var(--gold);color:var(--navy);transform:translateY(-2px)}
+.footer-grid a{transition:color .2s,transform .2s}
+.footer-grid a:hover{color:var(--gold);transform:translateX(3px)}
+.page-hero-custom{background-color:#101a2a;background-size:cover;background-position:center;isolation:isolate}
+.page-hero-custom h1{max-width:900px}
+.about-section-image img{width:100%;height:100%;min-height:280px;max-height:480px;object-fit:cover;border-radius:20px}
+.about-dynamic-section:nth-of-type(even){background:var(--surface,#f5f6f8)}
+.service-grid-page .service-card{overflow:hidden}
+.service-grid-page .service-card-image{height:210px;overflow:hidden;border-radius:14px;margin-bottom:18px}
+.service-grid-page .service-card-image img{width:100%;height:100%;object-fit:cover;transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+.service-grid-page .service-card:hover .service-card-image img{transform:scale(1.06)}
+.catalog-filters select:focus,.catalog-filters input:focus{outline:2px solid var(--gold);outline-offset:2px}
+.project-card,.service-card,.product-card{transition:transform .28s ease,box-shadow .28s ease}
+.project-card:hover,.service-card:hover,.product-card:hover{transform:translateY(-5px);box-shadow:0 18px 42px rgba(16,26,42,.12)}
+.footer-socials{display:flex;gap:8px}
+@media(max-width:900px){.nav-dropdown{display:block;width:100%}.nav-dropdown-menu{position:static;display:none;opacity:1;visibility:visible;transform:none;box-shadow:none;border:0;background:rgba(255,255,255,.06);padding:4px 0 4px 14px;min-width:0}.nav-dropdown:hover .nav-dropdown-menu,.nav-dropdown:focus-within .nav-dropdown-menu{display:grid}.nav-dropdown-menu a{color:inherit}.nav-dropdown-menu a:hover{color:var(--gold)}}
+@media(prefers-reduced-motion:reduce){.nav-dropdown-menu,.social-mini a,.footer-socials a,.project-card,.service-card,.product-card,.service-grid-page .service-card-image img{transition:none!important;scroll-behavior:auto!important}}

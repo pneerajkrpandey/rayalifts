@@ -64,6 +64,11 @@ class Page(TimeStampedModel):
     show_in_navigation = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
     display_order = models.PositiveIntegerField(default=0)
+    hero_title = models.CharField(max_length=220, blank=True)
+    hero_subtitle = models.TextField(blank=True)
+    hero_image = models.ImageField(upload_to="pages/hero/", blank=True, null=True)
+    hero_cta_text = models.CharField(max_length=80, blank=True)
+    hero_cta_url = models.CharField(max_length=240, blank=True)
 
     class Meta:
         ordering = ["display_order", "title"]
@@ -202,8 +207,11 @@ class Service(TimeStampedModel):
     title = models.CharField(max_length=160)
     slug = models.SlugField(unique=True, blank=True)
     summary = models.CharField(max_length=280, blank=True)
+    description = models.TextField(blank=True, help_text="Detailed service content; line breaks are preserved.")
     icon = models.CharField(max_length=32, default="arrow-up-right", help_text="Lucide-style icon name or short symbol")
     image = models.ImageField(upload_to="services/", blank=True, null=True)
+    cta_text = models.CharField(max_length=80, blank=True)
+    cta_url = models.CharField(max_length=240, blank=True)
     is_active = models.BooleanField(default=True)
     display_order = models.PositiveIntegerField(default=0)
 
@@ -272,3 +280,56 @@ class CustomSection(TimeStampedModel):
         ordering = ["display_order", "id"]
     def __str__(self):
         return self.title
+
+
+class HeroSection(TimeStampedModel):
+    PAGE_CHOICES = [("home", "Home"), ("about", "About"), ("services", "Services"), ("projects", "Our Work"), ("catalog", "Our Lifts"), ("contact", "Contact")]
+    page_key = models.CharField(max_length=24, choices=PAGE_CHOICES, unique=True)
+    eyebrow = models.CharField(max_length=100, blank=True)
+    title = models.CharField(max_length=220, blank=True)
+    subtitle = models.TextField(blank=True)
+    background_image = models.ImageField(upload_to="page-heroes/", blank=True, null=True)
+    cta_text = models.CharField(max_length=80, blank=True)
+    cta_url = models.CharField(max_length=240, blank=True)
+    is_active = models.BooleanField(default=True)
+    class Meta:
+        ordering = ["page_key"]
+    def __str__(self):
+        return f"{self.get_page_key_display()} hero"
+
+class AboutSection(TimeStampedModel):
+    SECTION_CHOICES = [("introduction", "Company Introduction"), ("story", "Our Story"), ("mission", "Mission"), ("vision", "Vision"), ("values", "Core Values"), ("statistics", "Company Statistics"), ("image", "Section Image")]
+    title = models.CharField(max_length=180)
+    section_type = models.CharField(max_length=24, choices=SECTION_CHOICES, default="introduction")
+    eyebrow = models.CharField(max_length=100, blank=True)
+    content = models.TextField(blank=True)
+    image = models.ImageField(upload_to="about/", blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    display_order = models.PositiveIntegerField(default=0)
+    class Meta:
+        ordering = ["display_order", "id"]
+    def __str__(self):
+        return self.title
+
+class CompanyStatistic(TimeStampedModel):
+    value = models.CharField(max_length=40, blank=True, help_text="Example: 500")
+    suffix = models.CharField(max_length=12, blank=True, default="+", help_text="Example: +")
+    label = models.CharField(max_length=120)
+    is_active = models.BooleanField(default=True)
+    animate_count = models.BooleanField(default=True)
+    display_order = models.PositiveIntegerField(default=0)
+    class Meta:
+        ordering = ["display_order", "id"]
+    def __str__(self):
+        return f"{self.value}{self.suffix} — {self.label}"
+
+class SocialLink(TimeStampedModel):
+    PLATFORM_CHOICES = [("instagram", "Instagram"), ("facebook", "Facebook"), ("linkedin", "LinkedIn"), ("youtube", "YouTube"), ("x", "X / Twitter"), ("pinterest", "Pinterest")]
+    platform = models.CharField(max_length=20, choices=PLATFORM_CHOICES, unique=True)
+    url = models.URLField(blank=True)
+    is_active = models.BooleanField(default=True)
+    display_order = models.PositiveIntegerField(default=0)
+    class Meta:
+        ordering = ["display_order", "platform"]
+    def __str__(self):
+        return self.get_platform_display()

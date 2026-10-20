@@ -80,7 +80,8 @@ class ServiceAdmin(admin.ModelAdmin):
     list_display = ("title", "slug", "is_active", "display_order", "updated_at")
     list_editable = ("is_active", "display_order")
     list_filter = ("is_active",)
-    search_fields = ("title", "summary")
+    search_fields = ("title", "summary", "description")
+    fieldsets = (("Service", {"fields": ("title", "slug", "summary", "description", "icon", "image")}), ("Call to action", {"fields": ("cta_text", "cta_url")}), ("Publishing", {"fields": ("is_active", "display_order")}))
     prepopulated_fields = {"slug": ("title",)}
 
 
@@ -106,3 +107,36 @@ class CustomSectionAdmin(admin.ModelAdmin):
     list_filter = ("is_active",)
     search_fields = ("title", "eyebrow", "body")
     ordering = ("display_order", "id")
+
+# Page-level content controls. These models keep editorial updates out of templates.
+from .models import HeroSection, AboutSection, CompanyStatistic, SocialLink
+
+@admin.register(HeroSection)
+class HeroSectionAdmin(admin.ModelAdmin):
+    list_display = ("page_key", "title", "is_active", "updated_at")
+    list_editable = ("is_active",)
+    list_filter = ("page_key", "is_active")
+    search_fields = ("title", "subtitle", "eyebrow")
+
+@admin.register(AboutSection)
+class AboutSectionAdmin(admin.ModelAdmin):
+    list_display = ("title", "section_type", "is_active", "display_order", "updated_at")
+    list_editable = ("is_active", "display_order")
+    list_filter = ("section_type", "is_active")
+    search_fields = ("title", "eyebrow", "content")
+    ordering = ("display_order", "id")
+
+@admin.register(CompanyStatistic)
+class CompanyStatisticAdmin(admin.ModelAdmin):
+    list_display = ("value", "suffix", "label", "is_active", "display_order", "animate_count")
+    list_editable = ("is_active", "display_order", "animate_count")
+    list_filter = ("is_active", "animate_count")
+    search_fields = ("value", "label")
+    ordering = ("display_order", "id")
+
+@admin.register(SocialLink)
+class SocialLinkAdmin(admin.ModelAdmin):
+    list_display = ("platform", "url", "is_active", "display_order")
+    list_editable = ("url", "is_active", "display_order")
+    list_filter = ("platform", "is_active")
+    ordering = ("display_order", "platform")

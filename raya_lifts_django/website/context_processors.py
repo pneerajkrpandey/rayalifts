@@ -1,4 +1,4 @@
-from .models import SiteSettings, Page, Category, HomeSection, CustomSection
+from .models import SiteSettings, Page, Category, HomeSection, CustomSection, SocialLink, HeroSection
 
 def site_settings(request):
     settings_obj = SiteSettings.objects.first()
@@ -15,5 +15,7 @@ def site_settings(request):
         "navigation_pages": navigation_pages,
         "navigation_categories": navigation_categories,
         "active_section_keys": active_section_keys,
-        "custom_home_sections": CustomSection.objects.filter(is_active=True),
+        "custom_home_sections": CustomSection.objects.filter(is_active=True).order_by("display_order", "id"),
+        "social_links": SocialLink.objects.filter(is_active=True).exclude(url="").order_by("display_order", "id"),
+        "hero_sections": {hero.page_key: hero for hero in HeroSection.objects.filter(is_active=True)},
     }
