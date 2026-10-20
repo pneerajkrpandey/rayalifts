@@ -9,7 +9,7 @@ def env_bool(name, default=False):
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-only-change-this-key-before-production")
 DEBUG = env_bool("DEBUG", True)
-ALLOWED_HOSTS = [x.strip() for x in os.environ.get("ALLOWED_HOSTS", "13.235.248.7,127.0.0.1,localhost").split(",") if x.strip()]
+ALLOWED_HOSTS = [x.strip() for x in os.environ.get("ALLOWED_HOSTS", "13.235.248.7,127.0.0.1,localhost, rayalifts.in,www.rayalifts.in").split(",") if x.strip()]
 CSRF_TRUSTED_ORIGINS = [x.strip() for x in os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",") if x.strip()]
 
 INSTALLED_APPS = [
